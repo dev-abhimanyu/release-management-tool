@@ -13,6 +13,11 @@
  
  ![new](/ss/new.JPG)
  
+ ## View
+ View the details of any specific release along with it's past history like who modified it, what changes were made, when were these changes made.
+ 
+ ![details](/ss/details.jpg)
+ 
  ## Search
  Use the advanced search filters to search for specific release(s) in the database.
  
@@ -27,6 +32,9 @@
  1. Belongs to the same customer
  2. Belongs to the same module
  3. Has an unstable status
+ For example: Two releases say REL456 and REL222 belonging to the same customer(Customer 2) and the same module(Module 2) are coinciding because they are having unstable statuses(UNDER_TESTING and ROLLING_BACK respectively). The statuses can be configured in the Config section.
+ 
+ THE LOGIC: The logic here is that it is very likely that some of the files/components of a release under testing might be shared with some other release which is under testing or is being rolled back. Whereas if a release is DEPLOYED or ROLLED_BACK (stable statuses), it has no affect on rest of the releases.
  
  ![coinciding_releases](/ss/coinciding_releases.JPG)
  
