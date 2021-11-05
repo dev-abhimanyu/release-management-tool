@@ -1,0 +1,121 @@
+<%- include('partials/head') %>
+
+    <body>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-0 col-md-2"></div>
+                <div class="col-12 col-md-8">
+                    <%- include('partials/navbar') %>
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="jumbotron">
+                                    <h1 class="display-4">Coinciding Releases</h1>
+                                    <p class="lead">Identify the releases currently in incomplete state and may coincide</p>
+                                </div>
+                                <hr class="my-4">
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th scope="col">#</th>
+                                                <th scope="col">Release Number</th>
+                                                <th scope="col">Customer</th>
+                                                <th scope="col">Module</th>
+                                                <th scope="col">Status</th>
+                                                <th scope="col">Release Date</th>
+                                                <th scope="col">Date Modified</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <% let count=1 %>
+                                                <% for(r of pageResults){ %>
+                                                    <tr>
+                                                        <th scope="row">
+                                                            <%= ((page-1)*PAGE_SIZE)+count %>
+                                                        </th>
+                                                        <td>
+                                                            <a href="/releases/<%= r.releaseNumber %>"><%= r.releaseNumber %></a>
+                                                        </td>
+                                                        <td>
+                                                            <%= r.customer %>
+                                                        </td>
+                                                        <td>
+                                                            <%= r.module %>
+                                                        </td>
+                                                        <td>
+                                                            <%= r.status.toUpperCase() %>
+                                                        </td>
+                                                        <td>
+                                                            <%= r.createdAt.toLocaleString('en-GB', {
+                                                                timeZone: 'Asia/Kolkata' }).replace(",","") %>
+                                                        </td>
+                                                        <td>
+                                                            <%= r.updatedAt.toLocaleString('en-GB', {
+                                                                timeZone: 'Asia/Kolkata' }).replace(",","") %>
+                                                        </td>
+                                                        <% count=count+1 %>
+                                                    </tr>
+                                                    <% } %>
+                                        </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <td colspan="7">
+                                                    <nav aria-label="...">
+                                                        <ul class="pagination justify-content-center">
+                                                            <li class="page-item <%= page===1?'disabled':'' %>">
+                                                                <% if(page===1){ %>
+                                                                    <span class="page-link">
+                                                                        Previous
+                                                                    </span>
+                                                                <% } %>
+                                                                <% if(page!==1){ %>
+                                                                    <a class="page-link" href="<%= `/releases/coincidingreleases?page=${page-1}` %> ">
+                                                                        Previous
+                                                                    </a>
+                                                                <% } %>
+                                                            </li>
+                                                            <% for(p=1;p<=pageCount;p++){ %>
+                                                                <li class="page-item <%= p===page?'active':'' %>"
+                                                                    aria-current="page">
+                                                                    <% if(p===page){ %>
+                                                                        <span class="page-link">
+                                                                            <%= p %>
+                                                                        </span>
+                                                                    <% } %>
+                                                                    <% if(p!==page){ %>
+                                                                        <a class="page-link" href="<%= `/releases/coincidingreleases?page=${p}` %>">
+                                                                            <%= p %>
+                                                                        </a>
+                                                                    <% } %>
+                                                                </li>
+                                                            <% } %>
+                                                                    <li class="page-item <%= page===pageCount?'disabled':'' %>">
+                                                                        <% if(page===pageCount){ %>
+                                                                            <span class="page-link">
+                                                                                Next
+                                                                            </span>
+                                                                        <% } %>
+                                                                        <% if(page!==pageCount){ %>
+                                                                            <a class="page-link" href="<%= `/releases/coincidingreleases?page=${page+1}` %> ">
+                                                                                Next
+                                                                            </a>
+                                                                        <% } %>
+                                                                    </li>
+                                                        </ul>
+                                                    </nav>
+                                                </td>
+
+                                            </tr>
+
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </div>
+                            <%- include('partials/footer') %>
+                        </div>
+                </div>
+            </div>
+        </div>
+    </body>
+
+    </html>

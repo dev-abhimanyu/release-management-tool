@@ -1,0 +1,30 @@
+<nav class="navbar sticky-top navbar-expand-lg navbar-dark" style="background-color: #050A30;">
+    <div class="container-fluid">
+      <!-- <a class="navbar-brand" href="/">Home</a> -->
+      <a class="navbar-brand" href="/releases">
+        <img src="/icons/package.png" alt="" width="30" height="30">
+        &nbsp;<b>Release Management Tool</b>
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+        <div class="navbar-nav">
+          <a class="nav-link <%= navActive==='home'?'active':'' %>" href="/releases">Home</a>
+          <a class="nav-link <%= navActive==='advanced_search'?'active':'' %>" href="/releases/advancedsearch">Search</a>
+          <a class="nav-link <%= navActive==='new'?'active':'' %>" href="/releases/new">New</a>
+          <a class="nav-link <%= navActive==='coinciding_releases'?'active':'' %>" href="/releases/coincidingreleases">Coinciding Releases</a>
+          <a class="nav-link <%= navActive==='history'?'active':'' %>" href="/releases/history">History</a>
+          <a class="nav-link <%= navActive==='status_config'?'active':'' %>" href="/releases/statusconfig">Config</a>
+          <!-- <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a> -->
+        </div>        
+        
+      </div>
+      
+      <span class="navbar-text">
+        <i class="bi bi-person-circle" style="font-size: 1rem; color: white;"></i>
+        <font color='white'><%= userName %></font>
+      </span>
+      
+    </div>
+  </nav>

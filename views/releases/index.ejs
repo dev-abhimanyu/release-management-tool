@@ -1,0 +1,90 @@
+<%- include('partials/head') %>
+
+    <body>
+        <div class="container-fluid" >
+            <div class="row">
+                <div class="col-0 col-md-2"></div>
+                <div class="col-12 col-md-8">
+                    <%- include('partials/navbar') %>
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="jumbotron">
+                                    <h1 class="display-4">Release Management Tool</h1>
+                                    <p class="lead">Single place to keep a record of all your releases</p>
+                                </div>
+                                <hr class="my-4">
+                                <div class="row">
+                                    <div class="col-9 col-md-9">
+                                        <div class="row">
+                                            <div class="col-12 col-md-12">
+                                                <h1 class="display-6">Search
+                                                    <small class="text-muted"> the release database</small>
+                                                </h1>
+                                                <p>Use the release id to search the database</p>
+                                                <form class="row gy-2 gx-3 align-items-center" method="POST"
+                                                    action="/release/search">
+                                                    <div class="col-auto">
+                                                        <input class="form-control mr-sm-2" type="search"
+                                                            placeholder="Release Id" name="searchRelease"
+                                                            id="searchRelease" aria-label="Search" required>
+                                                    </div>
+                                                    <div class="col-auto">
+                                                        <button class="btn btn-success my-2 my-sm-0"
+                                                            type="submit">Search</button>
+                                                        <!-- <img src="/icons/search.svg" class="img-fluid" alt=""> -->
+                                                    </div>
+                                                    <div class="col-auto">
+                                                        <a href="/releases/advancedsearch">
+                                                            <button type="button"
+                                                                class="btn btn-secondary">Advanced
+                                                                Search</button>
+                                                        </a>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                        <br>
+                                        <div class="row">
+                                            <div class="col-12 col-md-12">
+                                                <h1 class="display-6">Create
+                                                    <small class="text-muted">new release entry</small>
+                                                </h1>
+                                                <p>Add a new release entry into the database</p>
+                                                <!-- <button type="button" class="btn btn-outline-primary">Add</button> -->
+                                                <div class="col-auto">
+                                                    <a class="btn btn-primary" href="/releases/new"
+                                                        role="button">Add</a>
+                                                    <!-- <i class="bi bi-search"></i> -->
+                                                </div>
+                                                <!-- <p class="lead"></p>
+                                  <a class="btn btn-primary btn-lg" href="#" role="button">Learn more</a>
+                                </p> -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-3 col-md-3">
+                                        <div class="card">
+                                            <div class="card-header">
+                                                Recent Releases
+                                            </div>
+                                            <div class="card-body">
+                                                <ul class="list-group list-group-flush">
+                                                    <% for(r of recentReleases){ %>
+                                                        <li class="list-group-item"><a href="/releases/<%= r.releaseNumber %>">
+                                                                <%= r.releaseNumber %>
+                                                            </a></li>
+                                                        <% } %>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <%- include('partials/footer') %>
+                        </div>
+                </div>
+                <div class="col-0 col-md-2"></div>
+            </div>
+        </div>
+    </body>
+    </html>

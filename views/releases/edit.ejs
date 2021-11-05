@@ -1,0 +1,122 @@
+<%- include('partials/head') %>
+
+    <body>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-0 col-md-2"></div>
+                <div class="col-12 col-md-8">
+                    <%- include('partials/navbar') %>
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="jumbotron">
+                                    <h1 class="display-4">Edit a release</h1>
+                                    <p class="lead">Edit an existing release</p>
+                                </div>
+                                <hr class="my-4">
+                                <!-- <h1>New Release</h1> -->
+                                <form method="POST" action="/releases/<%= selectedRelease.releaseNumber %>?_method=PUT"
+                                    id="newForm" name="newForm">
+                                    <div class="row mb-3">
+                                        <label for="releaseNumber" class="col-sm-2 col-form-label">Release
+                                            Number<sup>*</sup></label>
+                                        <div class="col-sm-4">
+                                            <input type="text" class="form-control" name="releaseNumber"
+                                                id="releaseNumber" placeholder="Release Number"
+                                                value="<%= selectedRelease.releaseNumber %>" required>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label for="customerSelect"
+                                            class="col-sm-2 col-form-label">Customer<sup>*</sup></label>
+                                        <div class="col-sm-4">
+                                            <select class="form-select" id="customerSelect" name="customerSelect"
+                                                aria-label="customerSelect" onchange="CheckCustomer(this.value);">
+                                                <option value="undefined" selected>Select</option>
+                                                <% for(c of customers){ %>
+                                                    <option value="<%= c %>"
+                                                        <%=c===selectedRelease.customer?'selected':'' %>>
+                                                        <%= c %>
+                                                    </option>
+                                                    <% } %>
+                                                        <option value="new">Other</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <input type="text" class="form-control" name="customerInput"
+                                                id="customerInput" placeholder="Customer" style='display:none;'>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label for="moduleSelect"
+                                            class="col-sm-2 col-form-label">Module<sup>*</sup></label>
+                                        <div class="col-sm-4">
+                                            <select class="form-select" id="moduleSelect" name="moduleSelect"
+                                                aria-label="moduleSelect" onchange="CheckModule(this.value);">
+                                                <option value="undefined" selected>Select</option>
+                                                <% for(m of modules){ %>
+                                                    <option value="<%= m %>" <%=m===selectedRelease.module?'selected':''
+                                                        %>>
+                                                        <%= m %>
+                                                    </option>
+                                                    <% } %>
+                                                        <option value="new">Other</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <input type="text" class="form-control" name="moduleInput" id="moduleInput"
+                                                placeholder="Module" style='display:none;'>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label for="statusSelect"
+                                            class="col-sm-2 col-form-label">Status<sup>*</sup></label>
+                                        <div class="col-sm-4">
+                                            <select class="form-select" id="statusSelect" name="statusSelect"
+                                                aria-label="statusSelect" onchange="CheckStatus(this.value);">
+                                                <option value="undefined" selected>Select</option>
+                                                <% for(s of status){ %>
+                                                    <option value="<%= s %>" <%=s===selectedRelease.status?'selected':''
+                                                        %>>
+                                                        <%= s %>
+                                                    </option>
+                                                    <% } %>
+                                                        <!-- <option value="new">Other</option> -->
+                                            </select>
+                                        </div>
+                                        <!-- <div class="col-sm-4">
+                                            <input type="text" class="form-control" name="statusInput" id="statusInput"
+                                                placeholder="Status" style='display:none;'>
+                                        </div> -->
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label for="desc" class="col-sm-2 col-form-label">Description</label>
+                                        <div class="col-sm-4">
+                                            <textarea class="form-control" name="desc" id="desc"
+                                                placeholder="Description"
+                                                style="height: 100px"><%= selectedRelease.desc %></textarea>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-auto">
+                                            <button type="submit" class="btn btn-primary">Submit</button>
+                                            <!-- BACK -->
+                                            <button type="button" class="btn btn-secondary" onclick="history.back()">Back</button>
+                                        </div>
+                                        <div class="col-auto">
+                                            <span id="formError" style='color:red;display:none;'><small>Fields marked
+                                                    with * are mandatory.</small></span>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <%- include('partials/footer') %>
+                        </div>
+                </div>
+                <div class="col-0 col-md-2"></div>
+            </div>
+        </div>
+        <script src="/js/new_script.js"></script>
+    </body>
+
+    </html>

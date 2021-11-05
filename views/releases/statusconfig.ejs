@@ -1,0 +1,229 @@
+<%- include('partials/head') %>
+
+    <body>
+        <!-- modal 1 -->
+        <div class="modal fade" id="configuserModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+            aria-labelledby="configuserModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="configuserModalLabel">Enter Passkey</h5>
+                        <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
+                    </div>
+                    <div class="modal-body">
+                        <form id="authForm" name="authForm">
+                            <div class="mb-3">
+                                <label for="password" class="col-form-label">Please enter the passkey to modify the tool
+                                    configurations:</label>
+                                <input type="password" class="form-control" id="password" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Authenticate</button>
+                            <a class="btn btn-secondary" role="button" href='/releases'>Close</a>
+                            <a href='/releases' data-bs-target="#resetpassModal" data-bs-toggle="modal"><small>Reset
+                                    Passkey</small></a>
+                            <span id='incorrect_pass' hidden='true'>
+                                <font color='red'><small>Incorrect Passkey</small></font>
+                            </span>
+                            <!-- <div class="mb-3">
+                                <label for="message-text" class="col-form-label">Message:</label>
+                                <textarea class="form-control" id="message-text"></textarea>
+                            </div> -->
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- <script src="/js/configuser_modal.js"></script> -->
+        <!-- modal 2 -->
+        <div class="modal fade" id="resetpassModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+            aria-labelledby="resetpassModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="resetpassModalLabel">Enter Passkey</h5>
+                        <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
+                    </div>
+                    <div class="modal-body">
+                        <form action="/releases/statusconfig/resetpass" method="POST" id="resetpassForm"
+                            name="resetpassForm">
+                            <div class="mb-3">
+                                <label for="old_pass" class="col-form-label">Old Passkey: </label>
+                                <input type="password" class="form-control" id="old_pass" name="old_pass" required>
+                                <label for="new_pass" class="col-form-label">New Passkey: </label>
+                                <input type="password" class="form-control" id="new_pass" name="new_pass" required>
+                                <label for="confirm_pass" class="col-form-label">Confirm Passkey: </label>
+                                <input type="password" class="form-control" id="confirm_pass" name="confirm_pass"
+                                    required>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                            <button class="btn btn-warning" data-bs-target="#configuserModal"
+                                data-bs-toggle="modal">Back</button>
+                            <a class="btn btn-secondary" role="button" href='/releases'>Close</a>
+                            <span id='incorrect_pass2' hidden='true'>
+                                <font color='red'><small>Incorrect Passkey</small></font>
+                            </span>
+                            <!-- <div class="mb-3">
+                                <label for="message-text" class="col-form-label">Message:</label>
+                                <textarea class="form-control" id="message-text"></textarea>
+                            </div> -->
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            let configuserModal = new bootstrap.Modal(document.getElementById('configuserModal'), {
+                keyboard: false
+            })
+            configuserModal.toggle()
+            const authForm = document.querySelector("#authForm");
+            const incorrectPassMsg = document.querySelector('#incorrect_pass');
+            const pass = '<%= configUserResult.pass %>';
+            authForm.addEventListener('submit', function (e) {
+                // prevent the form from submitting
+                e.preventDefault();
+                let inputPass = document.querySelector("#password");
+                // console.log(inputPass.value);
+                // console.log(pass);
+                if (inputPass.value === pass) {
+                    // console.log('PASS');
+                    incorrectPassMsg.hidden = true;
+                    configuserModal.toggle()
+                }
+                else {
+                    // console.log('FAIL');
+                    authForm.reset();
+                    incorrectPassMsg.hidden = false;
+                }
+            });
+
+            // reset form
+            const resetpassForm = document.querySelector("#resetpassForm");
+            const incorrectPassMsg2 = document.querySelector('#incorrect_pass2');
+            const old_pass = document.querySelector('#old_pass');
+            const new_pass = document.querySelector('#new_pass');
+            const confirm_pass = document.querySelector('#confirm_pass');
+            resetpassForm.addEventListener('submit', function (e) {
+                e.preventDefault();
+                if (old_pass.value === pass) {
+                    if (new_pass.value === confirm_pass.value) {
+                        incorrectPassMsg2.hidden = true;
+                        // console.log('SUCCESS');
+                        resetpassForm.submit();
+                    }
+                    else {
+                        resetpassForm.reset();
+                        incorrectPassMsg2.hidden = false;
+                    }
+                }
+                else {
+                    resetpassForm.reset();
+                    incorrectPassMsg2.hidden = false;
+                }
+            });
+        </script>
+
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-0 col-md-2"></div>
+                <div class="col-12 col-md-8">
+                    <%- include('partials/navbar') %>
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="jumbotron">
+                                    <h1 class="display-4">Config</h1>
+                                    <p class="lead">modify/add/remove release statuses and set rules for them</p>
+                                </div>
+                                <hr class="my-4">
+                                <p>
+                                    <small>
+                                        Last Passkey Change By: <b>
+                                            <%= configUserResult.lastmodifiedby %>
+                                        </b>
+                                    </small>
+                                    <br>
+                                    <small>
+                                        Last Passkey Change On: <b>
+                                            <%= configUserResult.updatedAt.toLocaleString('en-GB', {
+                                                timeZone: 'Asia/Kolkata' }).replace(",","") %>
+                                        </b>
+                                    </small>
+                                </p>
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th scope="col">#</th>
+                                                <th scope="col">Status</th>
+                                                <th scope="col">isCompleteState</th>
+                                                <th scope="col">Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <% let count=1 %>
+                                                <% for(r of statusResults){ %>
+                                                    <tr>
+                                                        <th scope="row">
+                                                            <%= count %>
+                                                        </th>
+                                                        <td>
+                                                            <%= r.status %>
+                                                        </td>
+                                                        <td>
+                                                            <%= r.isCompleteState %>
+                                                        </td>
+                                                        <td><a
+                                                                href="/releases/statusconfig/delete?_id=<%= r._id %>">Delete</a>
+                                                        </td>
+                                                        <% count=count+1 %>
+                                                    </tr>
+                                                    <% } %>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <hr class="my-4">
+                                <form method="POST" action="/releases/statusconfig">
+                                    <div class="row g-3">
+                                        <h1 class="display-6">Create
+                                            <small class="text-muted"> a new status entry</small>
+                                        </h1>
+                                        <label for="status" class="col-sm-1 col-form-label">Status:</label>
+                                        <div class="col-sm-3">
+                                            <input type="text" class="form-control" name="status" id="status"
+                                                placeholder="Status" required>
+                                        </div>
+                                        <div class="form-check col-sm-2">
+                                            <input class="form-check-input" type="checkbox" id="isCompleteState"
+                                                name="isCompleteState">
+                                            <label class="form-check-label" for="isCompleteState">
+                                                isCompleteState
+                                            </label>
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <button type="submit" class="btn btn-primary">Add new status</button>
+                                        </div>
+                                    </div>
+                                </form>
+                                <hr class="my-4">
+                                <form method="POST" action="/releases/history">
+                                    <div class="row g-3">
+                                        <h1 class="display-6">Delete
+                                            <small class="text-muted"> release history</small>
+                                        </h1>
+                                        <p>Erase release history. Be careful as this will delete the histories of all the releases and is irreversible. However, this does NOT delete any data from the release database itself.</p>
+                                        <div class="col-sm-2">
+                                            <button type="submit" class="btn btn-danger">Delete History</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <%- include('partials/footer') %>
+                        </div>
+                </div>
+                <div class="col-0 col-md-2"></div>
+            </div>
+        </div>
+    </body>
+
+    </html>

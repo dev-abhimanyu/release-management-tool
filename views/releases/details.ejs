@@ -1,0 +1,183 @@
+<%- include('partials/head') %>
+
+    <body>
+        <% if(insertedSuccessfully == true){ %> 
+            <!-- Modal -->
+            <div class="modal fade" id="successModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+                aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="staticBackdropLabel">Successfully inserted</h5>
+                            <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
+                        </div>
+                        <div class="modal-body">
+                            Release <%= selectedRelease.releaseNumber %> was successfully inserted.
+                        </div>
+                        <div class="modal-footer">
+                            <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> -->
+                            <!-- <a href="/releases/new"><button type="button" class="btn btn-primary">Ok</button></a> -->
+                            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Ok</button></a>
+                            <!-- <a class="btn btn-primary" href="/releases/<%= selectedRelease.releaseNumber %>" role="button">Ok</a> -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <script src="/js/success_modal.js"></script>    
+        <% } %> 
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-0 col-md-2"></div>
+                <div class="col-12 col-md-8">
+                    <%- include('partials/navbar') %>
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="jumbotron">
+                                    <h1 class="display-4">Release Details</h1>
+                                    <p class="lead">View detailed description about a release</p>
+                                </div>
+                                <hr class="my-4">
+                                <h1 class="display-6">
+                                    <%= selectedRelease.releaseNumber %>
+                                </h1>
+                                <p>
+                                    <small>
+                                        Date Added: <%= selectedRelease.createdAt.toLocaleString('en-GB', {
+                                            timeZone: 'Asia/Kolkata' }).replace(",","") %>
+                                    </small>
+                                    <br>
+                                    <small>
+                                        Date Updated: <%= selectedRelease.updatedAt.toLocaleString('en-GB', {
+                                            timeZone: 'Asia/Kolkata' }).replace(",","") %>
+                                    </small>
+                                </p>
+                                <p>
+
+                                </p>
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th>Release Number</th>
+                                                <th>Customer</th>
+                                                <th>Module</th>
+                                                <th>Status</th>
+                                                <th>Description</th>
+                                                <th>Last Modified By</th>
+                                            </tr>
+                                        </thead>
+                                        <tr>
+                                            <td>
+                                                <%= selectedRelease.releaseNumber %>
+                                            </td>
+                                            <td>
+                                                <%= selectedRelease.customer %>
+                                            </td>
+                                            <td>
+                                                <%= selectedRelease.module %>
+                                            </td>
+                                            <td>
+                                                <%= selectedRelease.status %>
+                                            </td>
+                                            <td>
+                                                <%= selectedRelease.desc %>
+                                            </td>
+                                            <td>
+                                                <%= selectedRelease.user %>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <br>
+
+                                <!-- Release History -->
+                                <h1 class="display-6">
+                                    Release History
+                                </h1>
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th>Customer</th>
+                                                <th>Module</th>
+                                                <th>Status</th>
+                                                <th>Description</th>
+                                                <th>Action</th>
+                                                <th>Date</th>
+                                                <th>User</th>
+                                            </tr>
+                                        </thead>
+                                        <% for(r of releaseHistoryArr){ %>
+                                        <tr>
+                                             
+                                            <td>
+                                                <%= r.customer %>
+                                            </td>
+                                            <td>
+                                                <%= r.module %>
+                                            </td>
+                                            <td>
+                                                <%= r.status %>
+                                            </td>
+                                            <td>
+                                                <%= r.desc %>
+                                            </td>
+                                            <td>
+                                                <%= r.action %>
+                                            </td>
+                                            <td>
+                                                <%= r.createdAt.toLocaleString('en-GB', {
+                                                    timeZone: 'Asia/Kolkata' }).replace(",","") %>
+                                            </td>
+                                            <td>
+                                                <%= r.user %>
+                                            </td>
+                                        </tr>
+                                        <% } %> 
+                                    </table>
+                                </div>
+
+                                
+                                    <!-- EDIT  -->
+                                    <a class="btn btn-warning" role="button"
+                                        href="/releases/<%= selectedRelease.releaseNumber %>/edit">Edit</a>
+
+                                    <!-- DELETE -->
+                                    <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete</button>
+                                    <!-- Delete Modal -->
+                                    <div class="modal fade" id="deleteModal" tabindex="-1"
+                                        aria-labelledby="deleteModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="deleteModalLabel">Delete Release</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                        aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    Are you sure you want to delete release <%= selectedRelease.releaseNumber %> ? 
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary"
+                                                        data-bs-dismiss="modal">Close</button>
+                                                        <form method="POST" action="/releases/<%= selectedRelease.releaseNumber %>?_method=DELETE">
+                                                    <button type="submit" class="btn btn-primary">Yes</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- BACK -->
+                                    <button type="button" class="btn btn-primary" onclick="history.back()" <%= disableBack==true?'disabled':'' %>>Back</button>
+                                    <!-- <a class="btn btn-primary" role="button" href="/releases">Back to releases</a> -->
+                            </div>
+                            <%- include('partials/footer') %>
+                        </div>
+                </div>
+                <div class="col-0 col-md-2"></div>
+            </div>
+        </div>
+    </body>
+
+    </html>

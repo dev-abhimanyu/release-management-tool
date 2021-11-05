@@ -1,0 +1,190 @@
+<%- include('partials/head') %>
+
+    <body>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-0 col-md-2"></div>
+                <div class="col-12 col-md-8">
+                    <%- include('partials/navbar') %>
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="jumbotron">
+                                    <h1 class="display-4">Advanced Search</h1>
+                                    <p class="lead">Search the entire database using filters</p>
+                                </div>
+                                <hr class="my-4">
+
+                                <form method="POST" action="/releases/advancedsearch">
+                                    <div class="row">
+                                        <div class="col-3 col-md-3">
+                                            <label for="customerSelect" class="col-form-label">Customer</label>
+                                            <select class="form-select form-select-sm" id="customerSelect"
+                                                name="customerSelect" aria-label="customerSelect">
+                                                <!-- <option>Select</option> -->
+                                                <option value="undefined" selected>Select</option>
+                                                <% for(c of customers){ %>
+                                                    <option value="<%= c %>"
+                                                        <%=c===searchFilters.customerSelect?'selected':'' %>><%= c %>
+                                                    </option>
+                                                    <% } %>
+                                            </select>
+                                        </div>
+                                        <div class="col-3 col-md-3">
+                                            <label for="moduleSelect" class="col-form-label">Module</label>
+                                            <!--class="form-select" id="moduleSelect" name="moduleSelect"
+                                                aria-label="moduleSelect"-->
+                                            <select class="form-select form-select-sm" id="moduleSelect"
+                                                name="moduleSelect" aria-label="moduleSelect">
+                                                <option value="undefined" selected>Select</option>
+                                                <% for(m of modules){ %>
+                                                    <option value="<%= m %>"
+                                                        <%=m===searchFilters.moduleSelect?'selected':'' %>><%= m %>
+                                                    </option>
+                                                    <% } %>
+                                            </select>
+                                        </div>
+                                        <div class="col-3 col-md-3">
+                                            <label for="statusSelect" class="col-form-label">Status</label>
+                                            <select class="form-select form-select-sm" id="statusSelect"
+                                                name="statusSelect" aria-label="statusSelect">
+                                                <option value="undefined" selected>Select</option>
+                                                <% for(s of status){ %>
+                                                    <option value="<%= s %>"
+                                                        <%=s===searchFilters.statusSelect?'selected':'' %>><%= s %>
+                                                    </option>
+                                                    <% } %>
+                                            </select>
+                                        </div>
+                                        <div class="col-2 col-md-2">
+                                            <label for="sortBy" class="col-form-label">Sort by</label>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="sortBy" id="sortBy1"
+                                                    value="releaseDate" <%=searchFilters.sortBy==='releaseDate'
+                                                    ?'checked':'' %>>
+                                                <label class="form-check-label" for="sortBy1">
+                                                    Release Date
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="sortBy" id="sortBy2"
+                                                    value="dateModified" <%=searchFilters.sortBy==='dateModified'
+                                                    ?'checked':'' %>>
+                                                <label class="form-check-label" for="sortBy2">
+                                                    Date Modified
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-1 col-md-1">
+                                            <br>
+                                            <button type="submit" class="btn btn-primary btn-sm">Search</button>
+                                        </div>
+                                    </div>
+                                </form>
+                                <hr class="my-4">
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th scope="col">#</th>
+                                                <th scope="col">Release Number</th>
+                                                <th scope="col">Customer</th>
+                                                <th scope="col">Module</th>
+                                                <th scope="col">Status</th>
+                                                <th scope="col">Release Date</th>
+                                                <th scope="col">Date Modified</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <% let count=1 %>
+                                                <% for(r of searchResults){ %>
+                                                    <tr>
+                                                        <th scope="row">
+                                                            <%= ((page-1)*PAGE_SIZE)+count %>
+                                                        </th>
+                                                        <td>
+                                                            <a href="/releases/<%= r.releaseNumber %>"><%= r.releaseNumber %></a>
+                                                        </td>
+                                                        <td>
+                                                            <%= r.customer %>
+                                                        </td>
+                                                        <td>
+                                                            <%= r.module %>
+                                                        </td>
+                                                        <td>
+                                                            <%= r.status %>
+                                                        </td>
+                                                        <td>
+                                                            <%= r.createdAt.toLocaleString('en-GB', {
+                                                                timeZone: 'Asia/Kolkata' }).replace(",","") %>
+                                                        </td>
+                                                        <td>
+                                                            <%= r.updatedAt.toLocaleString('en-GB', {
+                                                                timeZone: 'Asia/Kolkata' }).replace(",","") %>
+                                                        </td>
+                                                        <% count=count+1 %>
+                                                    </tr>
+                                                    <% } %>
+                                        </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <td colspan="7">
+                                                    <nav aria-label="...">
+                                                        <ul class="pagination justify-content-center">
+                                                            <li class="page-item <%= page===1?'disabled':'' %>">
+                                                                <% if(page===1){ %>
+                                                                    <span class="page-link">
+                                                                        Previous
+                                                                    </span>
+                                                                <% } %>
+                                                                <% if(page!==1){ %>
+                                                                    <a class="page-link" href="<%= `/releases/advancedsearch?customerSelect=${searchFilters.customerSelect}&moduleSelect=${searchFilters.moduleSelect}&statusSelect=${searchFilters.statusSelect}&sortBy=${searchFilters.sortBy}&page=${page-1}` %> ">
+                                                                        Previous
+                                                                    </a>
+                                                                <% } %>
+                                                            </li>
+                                                            <% for(p=1;p<=pageCount;p++){ %>
+                                                                <li class="page-item <%= p===page?'active':'' %>"
+                                                                    aria-current="page">
+                                                                    <% if(p===page){ %>
+                                                                        <span class="page-link">
+                                                                            <%= p %>
+                                                                        </span>
+                                                                    <% } %>
+                                                                    <% if(p!==page){ %>
+                                                                        <a class="page-link" href="<%= `/releases/advancedsearch?customerSelect=${searchFilters.customerSelect}&moduleSelect=${searchFilters.moduleSelect}&statusSelect=${searchFilters.statusSelect}&sortBy=${searchFilters.sortBy}&page=${p}` %>">
+                                                                            <%= p %>
+                                                                        </a>
+                                                                    <% } %>
+                                                                </li>
+                                                            <% } %>
+                                                                    <li class="page-item <%= page===pageCount?'disabled':'' %>">
+                                                                        <% if(page===pageCount){ %>
+                                                                            <span class="page-link">
+                                                                                Next
+                                                                            </span>
+                                                                        <% } %>
+                                                                        <% if(page!==pageCount){ %>
+                                                                            <a class="page-link" href="<%= `/releases/advancedsearch?customerSelect=${searchFilters.customerSelect}&moduleSelect=${searchFilters.moduleSelect}&statusSelect=${searchFilters.statusSelect}&sortBy=${searchFilters.sortBy}&page=${page+1}` %> ">
+                                                                                Next
+                                                                            </a>
+                                                                        <% } %>
+                                                                    </li>
+                                                        </ul>
+                                                    </nav>
+                                                </td>
+
+                                            </tr>
+
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </div>
+                            <%- include('partials/footer') %>
+
+                        </div>
+                </div>
+            </div>
+        </div>
+    </body>
+
+    </html>
