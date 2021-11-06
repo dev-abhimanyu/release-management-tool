@@ -1,7 +1,7 @@
 # Release Management Tool
 ## Intro
 
-* Release Management Tool is a web application developed using **Node.js (Express.js, Express-NTLM, Mongoose, EJS), HTML, Bootstrap, CSS, Javascript** and **MongoDb**. 
+* Release Management Tool is a web application developed using **Node.js (Express.js, Express-NTLM, Mongoose, EJS), HTML, Bootstrap v5, CSS, Javascript** and **MongoDb**. 
 * The application aims to provide a unified platform to keep a record of releases by facilitating the tracking of operations performed on the releases. 
 * Another key feature of the application is to identify the "Coinciding Releases" so that the user(s) can pay special attention to them in order to avoid release failure/multiple rollbacks. This is achieved through the **MongoDb aggregate** function.
 * User identification (not validation) is achieved via Express-NTLM.
